@@ -51,7 +51,6 @@
   input[type="email"]:focus,
   input[type="file"]:focus {
     border-color: #00796b;
-    margin-right: 10px;
     box-shadow: 0 0 5px rgba(0,121,107,0.4);
   }
 
@@ -120,16 +119,14 @@
       width: 90%;
     }
 
-    #qrcode-container {
-      display: flex;
-      justify-content: center;
-      margin: 20px;
-    }
+  #qrcode-container {
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: center;     /* vertical center */
+  margin: 20px 0;
+}
 
-    #qrcode {
-      width: 114px;   /* 6:19 ratio */
-      height: 361px;  /* 6:19 ratio */
-    }
+    
 
     #downloadBtn {
       display: block;
@@ -251,102 +248,131 @@
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-  <script>
-    // Limit event selection to 2
-    const checkboxes = document.querySelectorAll('.eventChk');
-    checkboxes.forEach(cb => {
-      cb.addEventListener('change', () => {
-        let checked = document.querySelectorAll('.eventChk:checked');
-        if (checked.length > 2) {
-          cb.checked = false;
-          alert("You can select maximum 2 events only!");
-        }
-      });
-    });
-
-    const form = document.getElementById("regForm");
-    const paymentBox = document.getElementById("paymentBox");
-    const proceedBtn = document.getElementById("proceedBtn");
-    const overlay = document.getElementById("overlay");
-    const progress = document.getElementById("progress");
-    const success = document.getElementById("success");
-
-    proceedBtn.addEventListener("click", () => {
-      const upiId = "kmadhesh1017@okicici";  // UPI ID
-      const amount = 150;
-      const name = "Madhesh K";
-      const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
-
-      paymentBox.style.display = "block";
-      proceedBtn.style.display = "none";
-
-      document.getElementById("qrcode").innerHTML = "";
-      new QRCode(document.getElementById("qrcode"), {
-        text: upiUrl, width: 180, height: 180
-      });
-    });
-
-    // Submit registration
-    form.addEventListener("submit", async function(e){
-      e.preventDefault();
-      const fileInput = document.getElementById("screenshot").files[0];
-      if (!fileInput) { alert("Please upload payment screenshot before submitting!"); return; }
-
-      const formData = new FormData(form);
-      const base64 = await toBase64(fileInput);
-      formData.append("filename", fileInput.name);
-      formData.append("mimetype", fileInput.type);
-      formData.append("screenshot", base64.split(",")[1]);
-
-      overlay.style.display = "flex";
-      progress.style.display = "block";
-      success.style.display = "none";
-
-      fetch("https://script.google.com/macros/s/AKfycbxGxouZV3D34-8c0_OaS1szdI_sC0LOO2gAQqohtB8EYIwpoM4S68d95qQnkxDPN9Assw/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.text())
-      .then(data => {
-        progress.style.display = "none";
-        success.style.display = "flex";
-        setTimeout(() => {
-          overlay.style.display = "none";
-          alert("Registration Successful ✅ Check your mail for confirmation.");
-          form.reset();
-          paymentBox.style.display = "none";
-          proceedBtn.style.display = "block";
-        }, 1500);
-      })
-      .catch(err => {
-        overlay.style.display = "none";
-        alert("Upload failed: " + err);
-      });
-    });
-
-    function toBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-    }
-
-    // Download QR Code
-    const downloadQrBtn = document.getElementById('downloadQrBtn');
-    downloadQrBtn.addEventListener('click', () => {
-      const qrCanvas = document.querySelector('#qrcode canvas');
-      if(qrCanvas){
-        const dataUrl = qrCanvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = 'event_qrcode.png';
-        a.click();
-      } else {
-        alert('QR code not generated yet!');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  // Limit event selection to 2
+  const checkboxes = document.querySelectorAll('.eventChk');
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const checked = document.querySelectorAll('.eventChk:checked');
+      if (checked.length > 2) {
+        cb.checked = false;
+        alert("You can select maximum 2 events only!");
       }
     });
-  </script>
+  });
+
+  const form = document.getElementById("regForm");
+  const paymentBox = document.getElementById("paymentBox");
+  const proceedBtn = document.getElementById("proceedBtn");
+  const overlay = document.getElementById("overlay");
+  const progress = document.getElementById("progress");
+  const success = document.getElementById("success");
+
+  // Generate QR code
+  proceedBtn.addEventListener("click", () => {
+    const upiId = "kmadhesh1017@okicici";  // UPI ID
+    const amount = 150;
+    const name = "Madhesh K";
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+    paymentBox.style.display = "block";
+    proceedBtn.style.display = "none";
+
+    document.getElementById("qrcode").innerHTML = "";
+    new QRCode(document.getElementById("qrcode"), {
+      text: upiUrl,
+      width: 180,
+      height: 180
+    });
+  });
+
+  // Submit registration
+  form.addEventListener("submit", async function(e){
+    e.preventDefault();
+    const fileInput = document.getElementById("screenshot").files[0];
+    if (!fileInput) { 
+      alert("Please upload payment screenshot before submitting!"); 
+      return; 
+    }
+
+    const formData = new FormData(form);
+    const base64 = await toBase64(fileInput);
+    formData.append("filename", fileInput.name);
+    formData.append("mimetype", fileInput.type);
+    formData.append("screenshot", base64.split(",")[1]);
+
+    overlay.style.display = "flex";
+    progress.style.display = "block";
+    success.style.display = "none";
+
+    fetch("https://script.google.com/macros/s/AKfycbxGxouZV3D34-8c0_OaS1szdI_sC0LOO2gAQqohtB8EYIwpoM4S68d95qQnkxDPN9Assw/exec", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+      progress.style.display = "none";
+      success.style.display = "flex";
+      setTimeout(() => {
+        overlay.style.display = "none";
+        alert("Registration Successful ✅ Check your mail for confirmation.");
+        form.reset();
+        paymentBox.style.display = "none";
+        proceedBtn.style.display = "block";
+      }, 1500);
+    })
+    .catch(err => {
+      overlay.style.display = "none";
+      alert("Upload failed: " + err);
+    });
+  });
+
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // Download QR Code in 9:16 ratio with QR centered
+  const downloadQrBtn = document.getElementById('downloadQrBtn');
+  downloadQrBtn.addEventListener('click', () => {
+    const qrCanvas = document.querySelector('#qrcode canvas');
+    if (!qrCanvas) {
+      alert('QR code not generated yet!');
+      return;
+    }
+
+    // Create 9:16 canvas
+    const width = 450;   // 9 units
+    const height = 800;  // 16 units
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const ctx = tempCanvas.getContext('2d');
+
+    // Fill white background
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, width, height);
+
+    // Draw QR code centered
+    const qrSize = Math.min(width, height) * 0.5; // QR code 50% of smaller dimension
+    const x = (width - qrSize) / 2;
+    const y = (height - qrSize) / 2;
+    ctx.drawImage(qrCanvas, x, y, qrSize, qrSize);
+
+    // Download image
+    const dataUrl = tempCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'event_qrcode.png';
+    a.click();
+  });
+</script>
+
 </body>
 </html>
+
