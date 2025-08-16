@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPI Payment</title>
+</head>
+<body>
+  <h2>Pay via UPI</h2>
+
+  <label for="amount">Enter Amount (INR):</label>
+  <input type="number" id="amount" placeholder="100" min="1" required>
+  <br><br>
+
+  <button id="payBtn">Pay Now</button>
+
+  <script>
+    const payeeUPI = "kmadhesh1017@okicici"; // your UPI ID
+    const payeeName = "Madhesh"; // payee name
+
+    document.getElementById("payBtn").addEventListener("click", function() {
+      const amount = document.getElementById("amount").value;
+      if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      // Create UPI link
+      const upiLink = `upi://pay?pa=${payeeUPI}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent("Payment")}`;
+      
+      // Open UPI app
+      window.location.href = upiLink;
+    });
+  </script>
+</body>
+</html>
