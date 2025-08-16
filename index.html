@@ -51,6 +51,7 @@
   input[type="email"]:focus,
   input[type="file"]:focus {
     border-color: #00796b;
+    margin-right: 10px;
     box-shadow: 0 0 5px rgba(0,121,107,0.4);
   }
 
@@ -109,16 +110,49 @@
     text-align: center;
   }
 
-  #qrcode {
-    margin: 15px 0;
-    display: flex;
-    justify-content: center;
-  }
+.payment-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
 
-  #paymentText {
-    font-size: 14px;
-    color: #004d40;
-  }
+    #qrcode-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    #qrcode {
+      width: 114px;   /* 6:19 ratio */
+      height: 361px;  /* 6:19 ratio */
+    }
+
+    #downloadBtn {
+      display: block;
+      margin: 0 auto;
+      background: #00796b;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #downloadBtn:hover {
+      background: #004d40;
+    }
+
+    @media (max-width: 480px) {
+      #qrcode {
+        width: 80px;
+        height: 253px; /* maintain 6:19 ratio */
+      }
+    }
 
   /* Overlay loader */
   .overlay {
