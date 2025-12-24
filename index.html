@@ -1,396 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UMA TOYS - UPI Payment</title>
+  <meta charset="UTF-8">
+  <title>UMA TOYS – UPI Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 20px;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 350px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    button {
+      background: #1dbf73;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
-<body style="font-family: Arial; text-align: center; padding: 20px;">
+<body>
 
-  <h2>🧸 UMA TOYS PAYMENT 🧸</h2>
+  <div class="box">
+    <h2>🧸 UMA TOYS 🧸</h2>
 
-  <input 
-    type="number" 
-    id="amount" 
-    placeholder="Enter Amount ₹" 
-    style="padding:10px; width:200px; font-size:16px;"
-  >
+    <p>Enter Amount (₹)</p>
+    <input type="number" id="amount" placeholder="Enter amount">
 
-  <br><br>
+    <br>
+    <button onclick="generateQR()">Generate QR</button>
 
-  <button 
-    onclick="payUPI()" 
-    style="padding:12px 20px; font-size:16px; background:green; color:white; border:none; border-radius:5px;"
-  >
-    🟢 Pay Using UPI
-  </button>
+    <div id="qrcode"></div>
 
-  <p style="margin-top:20px;">
-    After payment, send screenshot here 📸
-  </p>
+    <br>
+    <a id="upiBtn" href="#" style="display:none;">
+      <button>Pay with UPI</button>
+    </a>
+  </div>
+
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
   <script>
-    function payUPI() {
-      var amount = document.getElementById("amount").value;
-      if(amount === "" || amount <= 0){
+    function generateQR() {
+      let amount = document.getElementById("amount").value;
+
+      if (!amount || amount <= 0) {
         alert("Enter valid amount");
         return;
       }
 
-      var upiLink = 
-        "upi://pay?pa=kmadhesh143@oksbi&pn=Madhesh&am=" 
-        + amount + 
+      let upiLink =
+        "upi://pay?pa=kmadhesh143@oksbi" +
+        "&pn=UMA%20TOYS" +
+        "&am=" + amount +
         "&cu=INR";
 
-      window.location.href = upiLink;
+      document.getElementById("qrcode").innerHTML = "";
+
+      new QRCode(document.getElementById("qrcode"), {
+        text: upiLink,
+        width: 200,
+        height: 200
+      });
+
+      let btn = document.getElementById("upiBtn");
+      btn.href = upiLink;
+      btn.style.display = "inline-block";
     }
   </script>
 
 </body>
-</html>  input[type="email"],
-  input[type="file"] {
-    width: 100%;
-    padding-right: 12px;
-    padding: 12px;
-    margin-top: 5px;
-    margin-right: 15px;
-    border-radius: 8px;
-    border: 1px solid #b2dfdb;
-    outline: none;
-    transition: all 0.3s ease;
-  }
-
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="file"]:focus {
-    border-color: #00796b;
-    box-shadow: 0 0 5px rgba(0,121,107,0.4);
-  }
-
-  /* Radio & Checkbox */
-  input[type="radio"],
-  input[type="checkbox"] {
-    margin-right: 8px;
-  }
-
-  .event-checkboxes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 5px;
-  }
-
-  /* Buttons */
-  button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  #proceedBtn {
-    background: #00796b;
-    color: #fff;
-    width: 100%;
-    margin-top: 20px;
-  }
-
-  #proceedBtn:hover {
-    background: #004d40;
-  }
-
-  .pay-btn {
-    width: 100%;
-    margin-top: 15px;
-    color: #fff;
-    font-size: 16px;
-  }
-
-  .pay-btn:hover {
-    opacity: 0.9;
-  }
-
-  .payment-box {
-    display: none;
-    border: 1px solid #b2dfdb;
-    padding: 20px;
-    margin-right: 15px;
-    margin-top: 20px;
-    border-radius: 12px;
-    background: #e0f2f1;
-    text-align: center;
-  }
-
-.payment-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
-
-  #qrcode-container {
-  display: flex;
-  justify-content: center; /* horizontal center */
-  align-items: center;     /* vertical center */
-  margin: 20px 0;
-}
-
-    
-
-    #downloadBtn {
-      display: block;
-      margin: 0 auto;
-      background: #00796b;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    #downloadBtn:hover {
-      background: #004d40;
-    }
-
-    @media (max-width: 480px) {
-      #qrcode {
-        width: 80px;
-        height: 253px; /* maintain 6:19 ratio */
-      }
-    }
-
-  /* Overlay loader */
-  .overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right:0; bottom:0;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .loader-box {
-    text-align: center;
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-  }
-
-  .success-check svg path {
-    stroke-dasharray: 50;
-    stroke-dashoffset: 50;
-    animation: draw 0.8s forwards;
-  }
-
-  @keyframes draw {
-    to { stroke-dashoffset: 0; }
-  }
-
-  /* Responsive */
-  @media screen and (max-width: 600px) {
-    .form-container {
-      margin: 20px;
-      padding: 20px;
-    }
-
-    .event-checkboxes {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
-
-</head>
-<body>
-  <div class="form-container">
-    <h2>Registration Form</h2>
-    <form id="regForm">
-      <label>Name:</label><input type="text" name="name" required>
-      <label>College:</label><input type="text" name="college" required>
-      <label>Year:</label>
-      <label><input type="radio" name="year" value="I" required> I</label>
-      <label><input type="radio" name="year" value="II"> II</label>
-      <label><input type="radio" name="year" value="III"> III</label>
-      <label><input type="radio" name="year" value="IV"> IV</label>
-      <label>Department:</label><input type="text" name="department" required>
-
-      <label>Events (Select Max 2):</label>
-      <label><input type="checkbox" name="event" value="Paper Presentation" class="eventChk"> Paper Presentation</label>
-      <label><input type="checkbox" name="event" value="Hunt Quest" class="eventChk"> Hunt Quest</label>
-      <label><input type="checkbox" name="event" value="Prompt Protocol" class="eventChk"> Prompt Protocol</label>
-      <label><input type="checkbox" name="event" value="Cyber Pixels" class="eventChk"> Cyber Pixels</label>
-      <label><input type="checkbox" name="event" value="Case 404" class="eventChk"> Case 404</label>
-      <label><input type="checkbox" name="event" value="Code in Borderland" class="eventChk"> Code in Borderland</label>
-
-      <label>Email:</label><input type="email" name="email" required>
-      <label>Phone:</label><input type="text" name="phone" required>
-
-      <button type="button" id="proceedBtn">Proceed to Payment</button>
-
-      <!-- Payment Section -->
-      <div class="payment-box" id="paymentBox">
-        <h3>Pay ₹150 to Complete Registration</h3>
-        <div id="qrcode"></div>
-        <p id="paymentText">Scan the QR code or click the button below to Download QR & Pay:</p>
-        <button type="button" id="downloadQrBtn" class="pay-btn" style="background:#2ecc71;">Download QR Code</button>
-        <label>Upload Payment Screenshot:</label>
-        <input type="file" id="screenshot" name="screenshot" accept="image/*" required>
-        <button type="submit" class="pay-btn" style="background:#3498db; margin-top:10px;">Submit Registration</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Overlay loader -->
-  <div class="overlay" id="overlay"> 
-    <div class="loader-box">
-      <div class="progress-circle" id="progress">Processing...</div>
-      <div class="success-check" id="success">
-        <svg viewBox="0 0 52 52" width="50" height="50">
-          <path d="M14 27l7 7 17-17" stroke="#2ecc71" stroke-width="5" fill="none"></path>
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- QRCode.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-  // Limit event selection to 2
-  const checkboxes = document.querySelectorAll('.eventChk');
-  checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      const checked = document.querySelectorAll('.eventChk:checked');
-      if (checked.length > 2) {
-        cb.checked = false;
-        alert("You can select maximum 2 events only!");
-      }
-    });
-  });
-
-  const form = document.getElementById("regForm");
-  const paymentBox = document.getElementById("paymentBox");
-  const proceedBtn = document.getElementById("proceedBtn");
-  const overlay = document.getElementById("overlay");
-  const progress = document.getElementById("progress");
-  const success = document.getElementById("success");
-
-  // Generate QR code
-  proceedBtn.addEventListener("click", () => {
-    const upiId = "kmadhesh1017@okicici";  // UPI ID
-    const amount = 150;
-    const name = "Madhesh K";
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
-
-    paymentBox.style.display = "block";
-    proceedBtn.style.display = "none";
-
-    document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), {
-      text: upiUrl,
-      width: 180,
-      height: 180
-    });
-  });
-
-  // Submit registration
-  form.addEventListener("submit", async function(e){
-    e.preventDefault();
-    const fileInput = document.getElementById("screenshot").files[0];
-    if (!fileInput) { 
-      alert("Please upload payment screenshot before submitting!"); 
-      return; 
-    }
-
-    const formData = new FormData(form);
-    const base64 = await toBase64(fileInput);
-    formData.append("filename", fileInput.name);
-    formData.append("mimetype", fileInput.type);
-    formData.append("screenshot", base64.split(",")[1]);
-
-    overlay.style.display = "flex";
-    progress.style.display = "block";
-    success.style.display = "none";
-
-    fetch("https://script.google.com/macros/s/AKfycbxGxouZV3D34-8c0_OaS1szdI_sC0LOO2gAQqohtB8EYIwpoM4S68d95qQnkxDPN9Assw/exec", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.text())
-    .then(data => {
-      progress.style.display = "none";
-      success.style.display = "flex";
-      setTimeout(() => {
-        overlay.style.display = "none";
-        alert("Registration Successful ✅ Check your mail for confirmation.");
-        form.reset();
-        paymentBox.style.display = "none";
-        proceedBtn.style.display = "block";
-      }, 1500);
-    })
-    .catch(err => {
-      overlay.style.display = "none";
-      alert("Upload failed: " + err);
-    });
-  });
-
-  function toBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
-  // Download QR Code in 9:16 ratio with QR centered
-  const downloadQrBtn = document.getElementById('downloadQrBtn');
-  downloadQrBtn.addEventListener('click', () => {
-    const qrCanvas = document.querySelector('#qrcode canvas');
-    if (!qrCanvas) {
-      alert('QR code not generated yet!');
-      return;
-    }
-
-    // Create 9:16 canvas
-    const width = 450;   // 9 units
-    const height = 800;  // 16 units
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = width;
-    tempCanvas.height = height;
-    const ctx = tempCanvas.getContext('2d');
-
-    // Fill white background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, width, height);
-
-    // Draw QR code centered
-    const qrSize = Math.min(width, height) * 0.5; // QR code 50% of smaller dimension
-    const x = (width - qrSize) / 2;
-    const y = (height - qrSize) / 2;
-    ctx.drawImage(qrCanvas, x, y, qrSize, qrSize);
-
-    // Download image
-    const dataUrl = tempCanvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'event_qrcode.png';
-    a.click();
-  });
-</script>
-
-</body>
 </html>
-
-
-
-
-
