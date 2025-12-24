@@ -96,7 +96,7 @@ function generateQR() {
     return;
   }
 
-  const upiId = "kmadhesh143@oksbi"; // YOUR UPI ID
+  const upiId = "nithin0832@oksbi";
   const name = "Markart";
   const note = "Website Payment";
 
@@ -107,25 +107,18 @@ function generateQR() {
     `https://api.qrserver.com/v1/create-qr-code/?size=600x800&data=${encodeURIComponent(upiUrlGlobal)}`;
 
   document.getElementById("qrBox").innerHTML =
-    `<img src="${qrApi}" class="qr-img" alt="UPI QR Code">
+    `<img src="${qrApi}" class="qr-img">
      <p>Scan with GPay / PhonePe / Paytm</p>`;
 
-  document.getElementById("shareBtn").classList.remove("hidden");
+  document.getElementById("payBtn").classList.remove("hidden");
 }
 
-function shareUPI() {
-  if (navigator.share) {
-    navigator.share({
-      title: "Pay with UPI",
-      text: "Pay securely using any UPI app",
-      url: upiUrlGlobal
-    });
-  } else {
-    // fallback
-    window.location.href = upiUrlGlobal;
-  }
+function payWithUPI() {
+  // MUST be direct redirect
+  window.location.href = upiUrlGlobal;
 }
 </script>
-
+  
 </body>
 </html>
+
