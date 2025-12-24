@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Registration</title>
-<style>
-  /* General Styles */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
-    margin: 0;
-    padding: 0;
+  <title>UMA Toys Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family: Arial; text-align:center; padding:20px;">
+
+<h2>🧸 UMA TOYS PAYMENT 🧸</h2>
+
+<input type="number" id="amount" placeholder="Enter Amount ₹"
+style="padding:10px; font-size:16px; width:200px;"><br><br>
+
+<button onclick="payNow()"
+style="padding:12px 20px; font-size:16px; background:green; color:white; border:none; border-radius:5px;">
+PAY USING UPI
+</button>
+
+<script>
+function payNow() {
+  var amt = document.getElementById("amount").value;
+  if(amt == "" || amt <= 0){
+    alert("Enter valid amount");
+    return;
   }
 
-  .form-container {
-    max-width: 600px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  }
+  var upiLink =
+  "upi://pay?pa=kmadhesh1017@okicici&pn=UMA%20Toys&am=" + amt + "&cu=INR";
 
-  h2 {
-    text-align: center;
-    color: #00796b;
-    margin-bottom: 25px;
-    font-size: 28px;
-  }
+  window.location.href = upiLink;
+}
+</script>
 
-  label {
-    font-weight: 500;
-    margin-top: 15px;
-    display: block;
-  }
-
+</body>
+</html>
   input[type="text"],
   input[type="email"],
   input[type="file"] {
@@ -378,6 +376,7 @@
 
 </body>
 </html>
+
 
 
 
