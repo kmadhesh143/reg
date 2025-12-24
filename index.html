@@ -25,14 +25,23 @@ button {
   border: none;
   border-radius: 6px;
   margin-top: 10px;
+  cursor: pointer;
 }
 canvas {
   margin-top: 15px;
   max-width: 100%;
   border-radius: 10px;
   border: 1px solid #ddd;
+  display: none; /* Hide initially */
+}
+#shareBtn {
+  display: none; /* Hide initially */
 }
 </style>
+
+<!-- QRCode.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 </head>
 <body>
 
@@ -45,25 +54,44 @@ canvas {
 <br>
 <canvas id="canvas" width="600" height="800"></canvas>
 <br>
-<button onclick="shareImage()">pay with upi</button>
+<button id="shareBtn" onclick="shareImage()">Share Image</button>
 
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const UPI_ID = "kmadhesh143@oksbi"; // <-- Replace with your UPI ID
-let qrImage = new Image();
+const shareBtn = document.getElementById("shareBtn");
+const UPI_ID = "nithin0832@oksbi"; // <-- Replace with your UPI ID
 
 function generateQR() {
-  const amount = document.getElementById("amount").value.trim() || "0";
+  const amount = document.getElementById("amount").value.trim();
+  if (!amount) {
+    alert("Please enter an amount");
+    return;
+  }
 
-  // Create UPI URL
+  // UPI URL
   const upiURL = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=Payment&am=${amount}&cu=INR`;
 
-  // Use Google Chart API to generate QR code
-  const qrSrc = `https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${encodeURIComponent(upiURL)}&chld=L|1`;
+  // Generate QR using QRCode.js
+  const tempDiv = document.createElement("div");
+  new QRCode(tempDiv, {
+    text: upiURL,
+    width: 300,
+    height: 300,
+    correctLevel: QRCode.CorrectLevel.H
+  });
 
-  qrImage.src = qrSrc;
-  qrImage.onload = () => {
+  const qrImg = tempDiv.querySelector("img");
+  if (!qrImg) {
+    alert("QR generation failed");
+    return;
+  }
+
+  qrImg.onload = () => {
+    // Show canvas and share button
+    canvas.style.display = "block";
+    shareBtn.style.display = "inline-block";
+
     // Clear canvas
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -80,12 +108,15 @@ function generateQR() {
     ctx.fillText("₹ " + amount, canvas.width / 2, 200);
 
     // Draw QR
-    ctx.drawImage(qrImage, 150, 260, 300, 300);
+    ctx.drawImage(qrImg, 150, 260, 300, 300);
 
     // Text below QR
     ctx.font = "20px Arial";
     ctx.fillStyle = "#555";
     ctx.fillText("Scan using any UPI App", canvas.width / 2, 620);
+
+    // Scroll to share button
+    shareBtn.scrollIntoView({ behavior: "smooth" });
   };
 }
 
