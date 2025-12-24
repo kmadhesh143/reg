@@ -18,7 +18,7 @@ body {
 .container {
   background: #fff;
   padding: 25px;
-  width: 320px;
+  width: 330px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
   text-align: center;
@@ -38,6 +38,7 @@ input {
 button {
   width: 100%;
   padding: 12px;
+  margin-top: 10px;
   background: #2e7dff;
   color: white;
   border: none;
@@ -54,9 +55,17 @@ button:hover {
   margin-top: 20px;
 }
 
-img {
-  width: 220px;
-  height: 220px;
+.qr-img {
+  width: 240px;   /* 3:4 ratio */
+  height: 320px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -65,16 +74,20 @@ img {
 
 <div class="container">
   <h2>UPI Payment</h2>
-  <p>Enter amount & scan QR</p>
+  <p>Enter amount & scan / share QR</p>
 
   <input type="number" id="amount" placeholder="Enter amount (₹)" />
 
   <button onclick="generateQR()">Generate QR</button>
 
   <div id="qrBox"></div>
+
+  <button id="shareBtn" class="hidden" onclick="shareUPI()">Pay with UPI</button>
 </div>
 
 <script>
+let upiUrlGlobal = "";
+
 function generateQR() {
   const amount = document.getElementById("amount").value;
 
@@ -87,15 +100,30 @@ function generateQR() {
   const name = "Markart";
   const note = "Website Payment";
 
-  const upiUrl =
+  upiUrlGlobal =
     `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
 
   const qrApi =
-    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
+    `https://api.qrserver.com/v1/create-qr-code/?size=600x800&data=${encodeURIComponent(upiUrlGlobal)}`;
 
   document.getElementById("qrBox").innerHTML =
-    `<img src="${qrApi}" alt="UPI QR Code">
+    `<img src="${qrApi}" class="qr-img" alt="UPI QR Code">
      <p>Scan with GPay / PhonePe / Paytm</p>`;
+
+  document.getElementById("shareBtn").classList.remove("hidden");
+}
+
+function shareUPI() {
+  if (navigator.share) {
+    navigator.share({
+      title: "Pay with UPI",
+      text: "Pay securely using any UPI app",
+      url: upiUrlGlobal
+    });
+  } else {
+    // fallback
+    window.location.href = upiUrlGlobal;
+  }
 }
 </script>
 
