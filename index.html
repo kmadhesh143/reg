@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,10 +33,10 @@ canvas {
   max-width: 100%;
   border-radius: 10px;
   border: 1px solid #ddd;
-  display: none; /* Hide initially */
+  display: none;
 }
 #shareBtn {
-  display: none; /* Hide initially */
+  display: none;
 }
 </style>
 
@@ -69,30 +70,31 @@ function generateQR() {
     return;
   }
 
-  // UPI URL
   const upiURL = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=Payment&am=${amount}&cu=INR`;
 
-  // Generate QR using QRCode.js
+  // Temporary div to generate QR code as canvas
   const tempDiv = document.createElement("div");
-  new QRCode(tempDiv, {
+  const qr = new QRCode(tempDiv, {
     text: upiURL,
     width: 300,
     height: 300,
     correctLevel: QRCode.CorrectLevel.H
   });
 
-  const qrImg = tempDiv.querySelector("img");
-  if (!qrImg) {
+  // QRCode.js generates a <canvas> inside tempDiv
+  const qrCanvas = tempDiv.querySelector("canvas");
+  if (!qrCanvas) {
     alert("QR generation failed");
     return;
   }
 
-  qrImg.onload = () => {
-    // Show canvas and share button
+  // Wait a short time to ensure QR is rendered
+  setTimeout(() => {
+    // Show main canvas and share button
     canvas.style.display = "block";
     shareBtn.style.display = "inline-block";
 
-    // Clear canvas
+    // Clear main canvas
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -107,8 +109,8 @@ function generateQR() {
     ctx.fillStyle = "#0a7cff";
     ctx.fillText("₹ " + amount, canvas.width / 2, 200);
 
-    // Draw QR
-    ctx.drawImage(qrImg, 150, 260, 300, 300);
+    // Draw QR from generated QR canvas
+    ctx.drawImage(qrCanvas, 150, 260, 300, 300);
 
     // Text below QR
     ctx.font = "20px Arial";
@@ -117,7 +119,7 @@ function generateQR() {
 
     // Scroll to share button
     shareBtn.scrollIntoView({ behavior: "smooth" });
-  };
+  }, 50); // short delay to ensure QR is drawn
 }
 
 async function shareImage() {
@@ -136,6 +138,8 @@ async function shareImage() {
   });
 }
 </script>
+
+<p>Thanks for watching!</p>
 
 </body>
 </html>
